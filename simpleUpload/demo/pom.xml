@@ -4,13 +4,13 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <groupId>org.richfaces.sandbox.ui.componentName</groupId>
-        <artifactId>componentName-parent</artifactId>
+        <groupId>org.richfaces.sandbox.ui.simpleUpload</groupId>
+        <artifactId>simpleUpload-parent</artifactId>
         <version>4.2.1-SNAPSHOT</version>
     </parent>
 
-    <artifactId>componentName-demo</artifactId>
-    <name>Richfaces UI Components: componentName demo</name>
+    <artifactId>simpleUpload-demo</artifactId>
+    <name>Richfaces UI Components: simpleUpload demo</name>
     <packaging>war</packaging>
 
     <dependencies>
@@ -25,8 +25,8 @@
             <version>${project.version}</version>
         </dependency>
         <dependency>
-            <groupId>org.richfaces.sandbox.ui.componentName</groupId>
-            <artifactId>componentName-ui</artifactId>
+            <groupId>org.richfaces.sandbox.ui.simpleUpload</groupId>
+            <artifactId>simpleUpload-ui</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
@@ -44,7 +44,7 @@
     </dependencies>
 
     <build>
-        <finalName>componentName-demo</finalName>
+        <finalName>simpleUpload-demo</finalName>
     </build>
 </project>
 
