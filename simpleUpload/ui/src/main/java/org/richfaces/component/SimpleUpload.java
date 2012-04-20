@@ -36,7 +36,7 @@ import javax.faces.component.UIComponentBase;
         type = SimpleUpload.COMPONENT_TYPE,
         family = SimpleUpload.COMPONENT_FAMILY,
         renderer = @JsfRenderer(type = SimpleUploadRendererBase.RENDERER_TYPE),
-        tag = @Tag(name="bootstrap"))
+        tag = @Tag(name="simpleUpload"))
 public abstract class SimpleUpload extends UIComponentBase {
     public static final String COMPONENT_FAMILY = "org.richfaces.SimpleUploadFamily";
     public static final String COMPONENT_TYPE = "org.richfaces.SimpleUpload";

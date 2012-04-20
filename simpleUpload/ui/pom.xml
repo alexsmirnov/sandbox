@@ -39,6 +39,10 @@
             <type>pom</type>
             <scope>provided</scope>
         </dependency>
+        <dependency>
+        	<groupId>org.richfaces.ui.input</groupId>
+        	<artifactId>richfaces-ui-input-ui</artifactId>
+        </dependency>
     </dependencies>
 
     <build>
