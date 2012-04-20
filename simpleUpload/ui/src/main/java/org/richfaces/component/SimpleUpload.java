@@ -25,7 +25,7 @@ import org.richfaces.cdk.annotations.Attribute;
 import org.richfaces.cdk.annotations.JsfComponent;
 import org.richfaces.cdk.annotations.JsfRenderer;
 import org.richfaces.cdk.annotations.Tag;
-import org.richfaces.renderkit.ComponentNameRendererBase;
+import org.richfaces.renderkit.SimpleUploadRendererBase;
 
 import javax.faces.component.UIComponentBase;
 
@@ -33,13 +33,13 @@ import javax.faces.component.UIComponentBase;
  * Base class for the component.
  */
 @JsfComponent(
-        type = ComponentName.COMPONENT_TYPE,
-        family = ComponentName.COMPONENT_FAMILY,
-        renderer = @JsfRenderer(type = ComponentNameRendererBase.RENDERER_TYPE),
+        type = SimpleUpload.COMPONENT_TYPE,
+        family = SimpleUpload.COMPONENT_FAMILY,
+        renderer = @JsfRenderer(type = SimpleUploadRendererBase.RENDERER_TYPE),
         tag = @Tag(name="bootstrap"))
-public abstract class ComponentName extends UIComponentBase {
-    public static final String COMPONENT_FAMILY = "org.richfaces.ComponentNameFamily";
-    public static final String COMPONENT_TYPE = "org.richfaces.ComponentName";
+public abstract class SimpleUpload extends UIComponentBase {
+    public static final String COMPONENT_FAMILY = "org.richfaces.SimpleUploadFamily";
+    public static final String COMPONENT_TYPE = "org.richfaces.SimpleUpload";
 
     @Attribute
     abstract public String getAttr();
