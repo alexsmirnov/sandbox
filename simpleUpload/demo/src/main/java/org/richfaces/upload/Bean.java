@@ -1,4 +1,4 @@
-package org.richfaces.simpleUpload;
+package org.richfaces.upload;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
