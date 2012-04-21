@@ -21,27 +21,26 @@
  */
 package org.richfaces.component;
 
-import org.richfaces.cdk.annotations.Attribute;
 import org.richfaces.cdk.annotations.JsfComponent;
 import org.richfaces.cdk.annotations.JsfRenderer;
 import org.richfaces.cdk.annotations.Tag;
-import org.richfaces.renderkit.SimpleUploadRendererBase;
-
-import javax.faces.component.UIComponentBase;
 
 /**
  * Base class for the component.
  */
 @JsfComponent(
         type = SimpleUpload.COMPONENT_TYPE,
-        family = SimpleUpload.COMPONENT_FAMILY,
-        renderer = @JsfRenderer(type = SimpleUploadRendererBase.RENDERER_TYPE),
-        tag = @Tag(name="simpleUpload"))
-public abstract class SimpleUpload extends UIComponentBase {
-    public static final String COMPONENT_FAMILY = "org.richfaces.SimpleUploadFamily";
+        family = AbstractFileUpload.COMPONENT_FAMILY,
+        renderer = @JsfRenderer(type = "org.richfaces.SimpleUploadRenderer"),
+        tag = @Tag(name="simpleUpload",generate = false, handler = "org.richfaces.view.facelets.FileUploadHandler"),
+        attributes = {
+            "events-mouse-props.xml", 
+            "events-key-props.xml", 
+            "core-props.xml", 
+            "ajax-props.xml", 
+            "i18n-props.xml", 
+            "fileUploadListener-props.xml" })
+public abstract class SimpleUpload extends AbstractFileUpload {
     public static final String COMPONENT_TYPE = "org.richfaces.SimpleUpload";
-
-    @Attribute
-    abstract public String getAttr();
 
 }

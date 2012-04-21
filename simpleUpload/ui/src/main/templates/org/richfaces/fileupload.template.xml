@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+JBoss, Home of Professional Open Source
+Copyright ${year}, Red Hat, Inc. and individual contributors
+by the @authors tag. See the copyright.txt in the distribution for a
+full listing of individual contributors.
+
+
+This is free software; you can redistribute it and/or modify it
+under the terms of the GNU Lesser General Public License as
+published by the Free Software Foundation; either version 2.1 of
+the License, or (at your option) any later version.
+
+
+This software is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+Lesser General Public License for more details.
+
+
+You should have received a copy of the GNU Lesser General Public
+License along with this software; if not, write to the Free
+Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
+02110-1301 USA, or see the FSF site: http://www.fsf.org.
+-->
+<cdk:root xmlns="http://jboss.org/schema/richfaces/cdk/xhtml-el" xmlns:cdk="http://jboss.org/schema/richfaces/cdk/core"
+    xmlns:cc="http://jboss.org/schema/richfaces/cdk/jsf/composite" xmlns:c="http://jboss.org/schema/richfaces/cdk/jstl/core"
+    xmlns:xi="http://www.w3.org/2001/XInclude">
+    <cc:interface>
+        <cdk:class>org.richfaces.renderkit.html.SimpleUploadRenderer</cdk:class>
+        <cdk:superclass>org.richfaces.renderkit.FileUploadRendererBase</cdk:superclass>
+        <cdk:component-family>org.richfaces.FileUpload</cdk:component-family>
+        <cdk:renderer-type>org.richfaces.SimpleUploadRenderer</cdk:renderer-type>
+        <cdk:resource-dependency library="org.richfaces" name="ajax.reslib" />
+        <cdk:resource-dependency library="org.richfaces" name="base-component.reslib" />
+        <cdk:resource-dependency name="richfaces-event.js" />
+        <cdk:resource-dependency library="org.richfaces" name="simpleUpload.js" />
+        <cdk:resource-dependency library="org.richfaces" name="simpleUpload.css" />
+        <cdk:renders-children>true</cdk:renders-children>
+    </cc:interface>
+    <cc:implementation>
+        <cdk:object name="attributes" value="#{component.attributes}" />
+        <cdk:object name="disabled" value="#{attributes['disabled']}" />
+        <div id="#{clientId}" class="rf-su #{attributes['styleClass']}" cdk:passThroughWithExclusions="">
+            <div class="rf-su-hdr">
+                 <span class="rf-su-inp-cntr"> <!-- This span is needed for IE7 only. -->
+                                    <input type="file" class="rf-fu-inp" />
+                 </span>
+            </div>
+            <div class="rf-su-cntr">
+                    <cdk:call expression="renderChildren(facesContext, component)" />
+            </div>
+            <c:if test="#{!disabled}">
+                <div class="rf-su-cntr-hdn">
+                    <iframe name="#{clientId}" />
+                    <cdk:object name="progressBar" value="#{component.facets['progress']}" />
+                    <c:if test="#{progressBar != null}">
+                        <cdk:call expression="progressBar.encodeAll(facesContext)" />
+                    </c:if>
+                </div>
+                <cdk:scriptObject name="options">
+                    <cdk:scriptOption
+                        attributes="acceptedTypes onfilesubmit ontyperejected onuploadcomplete doneLabel
+						sizeExceededLabel stoppedLabel serverErrorLabel onclear" />
+                </cdk:scriptObject>
+                <script type="text/javascript">new RichFaces.ui.SimpleUpload(#{toScriptArgs(clientId, options)});</script>
+            </c:if>
+        </div>
+    </cc:implementation>
+</cdk:root>
