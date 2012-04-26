@@ -18,13 +18,11 @@
             <groupId>org.richfaces.ui</groupId>
             <artifactId>richfaces-components-ui</artifactId>
             <version>${project.version}</version>
-            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.richfaces.core</groupId>
             <artifactId>richfaces-core-impl</artifactId>
             <version>${project.version}</version>
-            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.richfaces.cdk</groupId>
@@ -38,10 +36,6 @@
             <version>2.0.0.Final</version>
             <type>pom</type>
             <scope>provided</scope>
-        </dependency>
-        <dependency>
-        	<groupId>org.richfaces.ui.input</groupId>
-        	<artifactId>richfaces-ui-input-ui</artifactId>
         </dependency>
     </dependencies>
 
