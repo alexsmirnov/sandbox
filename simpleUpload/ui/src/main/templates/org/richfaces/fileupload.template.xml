@@ -42,13 +42,11 @@ Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
         <cdk:object name="attributes" value="#{component.attributes}" />
         <cdk:object name="disabled" value="#{attributes['disabled']}" />
         <div id="#{clientId}" class="rf-su #{attributes['styleClass']}" cdk:passThroughWithExclusions="">
-            <div class="rf-su-hdr">
-                 <span class="rf-su-inp-cntr"> <!-- This span is needed for IE7 only. -->
-                                    <input type="file" class="rf-fu-inp" />
-                 </span>
-            </div>
             <div class="rf-su-cntr">
-                    <cdk:call expression="renderChildren(facesContext, component)" />
+                 <span class="rf-su-inp-cntr"> <!-- This span is needed for IE7 only. -->
+                       <input type="file" class="rf-su-inp" />
+                 </span>
+                 <cdk:call expression="renderChildren(facesContext, component)" />
             </div>
             <c:if test="#{!disabled}">
                 <div class="rf-su-cntr-hdn">

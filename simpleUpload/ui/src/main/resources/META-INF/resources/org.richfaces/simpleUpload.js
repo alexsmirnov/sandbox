@@ -32,18 +32,17 @@
         }
         this.element = jQuery(this.attachToDom());
         this.form = this.element.parents("form:first");
-        var header = this.element.children(".rf-su-hdr:first");
         this.uploadButton = this.element.children(".rf-su-cntr:first");
-        this.inputContainer = header.find(".rf-su-inp-cntr:first");
+        this.inputContainer = this.uploadButton.find(".rf-su-inp-cntr:first");
         this.input = this.inputContainer.children("input");
-        this.hiddenContainer = this.element.children("rf-su-cntr-hdn:first");
+        this.hiddenContainer = this.element.children(".rf-su-cntr-hdn:first");
         this.iframe = this.hiddenContainer.children("iframe:first");
         this.progressBarElement = this.iframe.next();
         this.progressBar = richfaces.$(this.progressBarElement);
         this.cleanInput = this.input.clone();
         this.addProxy = jQuery.proxy(this.__addItem, this);
         this.input.change(this.addProxy);
-        this.uploadButton.click(jQuery.proxy(this.__startUpload, this)).mousedown(pressButton)
+        this.uploadButton.mousedown(pressButton)
             .mouseup(unpressButton).mouseout(unpressButton);
         this.iframe.load(jQuery.proxy(this.__load, this));
         if (this.onfilesubmit) {
@@ -106,87 +105,62 @@
                         fileName = fileName.match(/[^\/]*$/)[0];
                     }
                 }
-                if (this.__accept(fileName) && (!this.noDuplicate || !this.__isFileAlreadyAdded(fileName))) {
-                    this.input.hide();
+                this.input.hide();
+                if (this.__accept(fileName)) {
                     this.input.unbind("change", this.addProxy);
-                    var item = new Item(this, fileName);
-                    this.list.append(item.getJQuery());
-                    this.items.push(item);
-                    this.input = this.cleanInput.clone();
-                    this.inputContainer.append(this.input);
-                    this.input.change(this.addProxy);
-                    this.__updateButtons();
+                    this.model = {name: fileName, state: ITEM_STATE.NEW};
+                    this.__startUpload();
                 }
+                this.input.remove();
+                this.input = this.cleanInput.clone();
+                this.inputContainer.append(this.input);
+                this.input.change(this.addProxy);
             },
 
-            __removeItem: function(item) {
-                this.items.splice(jQuery.inArray(item, this.items), 1);
-                this.submitedItems.splice(jQuery.inArray(item, this.submitedItems), 1);
-                this.__updateButtons();
-                richfaces.Event.fire(this.element, "onclear", [item.model]);
-            },
-
-            __removeAllItems: function(item) {
-                var itemsRemoved = [];
-                for (var i in this.submitedItems) {
-                    itemsRemoved.push(this.submitedItems[i].model);
-                }
-                for (var i in this.items) {
-                    itemsRemoved.push(this.items[i].model);
-                }
-                this.list.empty();
-                this.items.splice(0, this.items.length);
-                this.submitedItems.splice(0, this.submitedItems.length);
-                this.__updateButtons();
-                richfaces.Event.fire(this.element, "onclear", itemsRemoved);
-            },
-
-            __updateButtons: function() {
-                if (!this.loadableItem && this.list.children(".rf-su-itm").size()) {
-                    if (this.items.length) {
-                        this.uploadButton.css("display", "inline-block");
-                    } else {
-                        this.uploadButton.hide();
-                    }
-                    this.clearButton.css("display", "inline-block");
-                } else {
-                    this.uploadButton.hide();
-                    this.clearButton.hide();
-                }
-                if (this.maxFilesQuantity && this.__getTotalItemCount() >= this.maxFilesQuantity) {
-                    this.addButton.hide();
-                } else {
-                    this.addButton.css("display", "inline-block");
-                }
-            },
 
             __startUpload: function() {
-                this.loadableItem = this.items.shift();
-                this.__updateButtons();
-                this.loadableItem.startUploading();
+                this.model.state = ITEM_STATE.UPLOADING;
+                var uid = Math.random();
+                this.model.uid = uid;
+                this.__submit(uid);
+                if (this.progressBar) {
+                    this.progressBar.setValue(0);
+                    var params = {};
+                    params[UID_ALT] = uid;
+                    this.progressBar.enable(params);
+                }
             },
 
-            __submit: function() {
+            __finishUploading: function(state) {
+                if (this.progressBar) {
+                    this.progressBar.disable();
+                }
+//                this.state.html(this[state + "Label"]);
+                this.model.state = state;
+            },
+
+            __submit: function(uid) {
                 var originalAction = this.form.attr("action");
                 var originalEncoding = this.form.attr("encoding");
                 var originalEnctype = this.form.attr("enctype");
                 try {
+                    this.input.attr("name", this.id);
                     var delimiter = originalAction.indexOf("?") == -1 ? "?" : "&";
-                    this.form.attr("action", originalAction + delimiter + UID + "=" + this.loadableItem.uid);
+                    this.form.attr("action", originalAction + delimiter + UID + "=" + uid);
                     this.form.attr("encoding", "multipart/form-data");
                     this.form.attr("enctype", "multipart/form-data");
                     richfaces.submitForm(this.form, {"org.richfaces.ajax.component": this.id}, this.id);
-                    richfaces.Event.fire(this.element, "onfilesubmit", this.loadableItem.model);
+                    richfaces.Event.fire(this.element, "onfilesubmit", this.model);
                 } finally {
                     this.form.attr("action", originalAction);
                     this.form.attr("encoding", originalEncoding);
                     this.form.attr("enctype", originalEnctype);
-                    this.loadableItem.input.removeAttr("name");
+                    this.input.removeAttr("name");
                 }
             },
 
             __load: function(event) {
-                if (this.loadableItem) {
+            	if(this.model) {
                     var contentDocument = event.target.contentWindow.document;
                     contentDocument = contentDocument.XMLDocument || contentDocument;
                     var documentElement = contentDocument.documentElement;
@@ -194,7 +168,7 @@
                     if (documentElement.tagName.toUpperCase() == "PARTIAL-RESPONSE") {
                         var errors = jQuery(documentElement).children("error");
                         responseStatus = errors.length > 0 ? ITEM_STATE.SERVER_ERROR : ITEM_STATE.DONE;
-                    } else if ((id = documentElement.id) && id.indexOf(UID + this.loadableItem.uid + ":") == 0) {
+                    } else if ((id = documentElement.id) && id.indexOf(UID + this.model.uid + ":") === 0) {
                         responseStatus = id.split(":")[1];
                     }
                     if (responseStatus) {
@@ -205,127 +179,33 @@
                                 _mfSourceControlId: this.element.attr('id')
                             }
                         };
-
-                        responseStatus == ITEM_STATE.DONE && jsf.ajax.response({responseXML: contentDocument}, responseContext);
-                        this.loadableItem.finishUploading(responseStatus);
-                        this.submitedItems.push(this.loadableItem);
-                        if (responseStatus == ITEM_STATE.DONE && this.items.length) {
-                            this.__startUpload();
-                        } else {
-                            this.loadableItem = null;
-                            this.__updateButtons();
-                            var items = [];
-                            for (var i in this.submitedItems) {
-                                items.push(this.submitedItems[i].model);
-                            }
-                            for (var i in this.items) {
-                                items.push(this.items[i].model);
-                            }
-                            richfaces.Event.fire(this.element, "onuploadcomplete", items);
+                        if(responseStatus === ITEM_STATE.DONE ){
+                        	jsf.ajax.response({responseXML: contentDocument}, responseContext);
                         }
+                        this.__finishUploading(responseStatus);
+                        richfaces.Event.fire(this.element, "onuploadcomplete", this.model);
+                        this.model = null;
                     }
-                }
+            	}
             },
 
             __accept: function(fileName) {
                 fileName = fileName.toUpperCase();
                 var result = !this.acceptedTypes;
+                var extension;
                 for (var i = 0; !result && i < this.acceptedTypes.length; i++) {
-                    var extension = this.acceptedTypes[i];
+                    extension = this.acceptedTypes[i];
                     result = fileName.indexOf(extension, fileName.length - extension.length) !== -1;
                 }
                 if (!result) {
                     richfaces.Event.fire(this.element, "ontyperejected", fileName);
                 }
                 return result;
-            },
-
-            __isFileAlreadyAdded: function(fileName) {
-                var result = false;
-                for (var i = 0; !result && i < this.items.length; i++) {
-                    result = this.items[i].model.name == fileName;
-                }
-                result = result || (this.loadableItem && this.loadableItem.model.name == fileName);
-                for (var i = 0; !result && i < this.submitedItems.length; i++) {
-                    result = this.submitedItems[i].model.name == fileName;
-                }
-                return result;
-            },
-            
-
-            __getTotalItemCount : function() {
-                return this.__getItemCountByState(this.items, ITEM_STATE.NEW)
-                    + this.__getItemCountByState(this.submitedItems, ITEM_STATE.DONE)
-            },
-
-            __getItemCountByState : function(items) {
-                var statuses = {}
-                var s = 0;
-                for ( var i = 1; i < arguments.length; i++) {
-                    statuses[arguments[i]] = true;
-                }
-                for ( var i = 0; i < items.length; i++) {
-                    if (statuses[items[i].model.state]) {
-                        s++;
-                    }
-                }
-                return s;
             }
+
         };
     })());
 
 
-    var Item = function(fileUpload, fileName) {
-        this.fileUpload = fileUpload;
-        this.input = fileUpload.input;
-        this.model = {name: fileName, state: ITEM_STATE.NEW};
-    };
 
-    jQuery.extend(Item.prototype, {
-            getJQuery: function() {
-                this.element = jQuery(ITEM_HTML);
-                var leftArea = this.element.children(".rf-su-itm-lft:first");
-                this.label = leftArea.children(".rf-su-itm-lbl:first");
-                this.state = this.label.nextAll(".rf-su-itm-st:first");
-                this.link = leftArea.next().children("a");
-                this.label.html(this.model.name);
-                this.link.html(this.fileUpload["deleteLabel"]);
-                this.link.click(jQuery.proxy(this.removeOrStop, this));
-                return this.element;
-            },
-
-            removeOrStop: function() {
-                this.input.remove();
-                this.element.remove();
-                this.fileUpload.__removeItem(this);
-            },
-
-            startUploading: function() {
-                this.state.css("display", "block");
-                this.link.html("");
-                this.input.attr("name", this.fileUpload.id);
-                this.model.state = ITEM_STATE.UPLOADING;
-                this.uid = Math.random();
-                this.fileUpload.__submit();
-                if (this.fileUpload.progressBar) {
-                    this.fileUpload.progressBar.setValue(0);
-                    this.state.html(this.fileUpload.progressBarElement.detach());
-
-                    var params = {};
-                    params[UID_ALT] = this.uid;
-                    this.fileUpload.progressBar.enable(params);
-                }
-            },
-
-            finishUploading: function(state) {
-                if (this.fileUpload.progressBar) {
-                    this.fileUpload.progressBar.disable();
-                    this.fileUpload.hiddenContainer.append(this.fileUpload.progressBarElement.detach());
-                }
-                this.input.remove();
-                this.state.html(this.fileUpload[state + "Label"]);
-                this.link.html(this.fileUpload["clearLabel"]);
-                this.model.state = state;
-            }
-        });
 }(window.RichFaces, jQuery));
