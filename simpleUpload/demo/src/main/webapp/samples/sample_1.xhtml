@@ -15,9 +15,19 @@
 			<h:panelGrid columns="2">
 				<my:simpleUpload fileUploadListener="#{fileUploadBean.listener}"
 					id="simpleUpload" acceptedTypes="jpg, gif, png, bmp"
-					ontyperejected="alert('Only JPG, GIF, PNG and BMP files are accepted');">
-					<a4j:ajax event="uploadcomplete" execute="@none" render="info" />
-					<div style="width: 200px;height: 200px; background-color: red">Upload image</div>
+					ontyperejected="alert('Only JPG, GIF, PNG and BMP files are accepted');"
+					title="Click to upload new image">
+					<a4j:ajax event="uploadcomplete" execute="@none" render="info avatar" />
+					<a4j:outputPanel layout="block" id="avatar" style="width: 100px;height: 100px;">
+										<h:outputText value="Click here to upload image"
+						rendered="#{fileUploadBean.size==0}" />
+								<a4j:mediaOutput element="img" mimeType="image/jpeg"
+									createContent="#{fileUploadBean.paintLast}"
+									style="width:100px; height:100px;" cacheable="false"
+									rendered="#{fileUploadBean.size!=0}">
+									<f:param value="#{fileUploadBean.timeStamp}" name="time" />
+								</a4j:mediaOutput>
+					</a4j:outputPanel>				
 				</my:simpleUpload>
 				<rich:fileUpload fileUploadListener="#{fileUploadBean.listener}"
 					id="upload" acceptedTypes="jpg, gif, png, bmp"

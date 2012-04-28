@@ -24,6 +24,11 @@ public class FileUploadBean implements Serializable {
         stream.close();
     }
  
+    public void paintLast(OutputStream stream, Object object) throws IOException {
+        stream.write(getFiles().get(getFiles().size()-1).getData());
+        stream.close();
+    }
+
     public void listener(FileUploadEvent event) throws Exception {
         UploadedFile item = event.getUploadedFile();
         UploadedImage file = new UploadedImage();
