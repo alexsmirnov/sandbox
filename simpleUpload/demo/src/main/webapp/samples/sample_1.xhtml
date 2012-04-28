@@ -17,6 +17,7 @@
 					id="simpleUpload" acceptedTypes="jpg, gif, png, bmp"
 					ontyperejected="alert('Only JPG, GIF, PNG and BMP files are accepted');">
 					<a4j:ajax event="uploadcomplete" execute="@none" render="info" />
+					<div style="width: 200px;height: 200px; background-color: red">Upload image</div>
 				</my:simpleUpload>
 				<rich:fileUpload fileUploadListener="#{fileUploadBean.listener}"
 					id="upload" acceptedTypes="jpg, gif, png, bmp"

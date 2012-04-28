@@ -35,7 +35,7 @@ Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
         <cdk:resource-dependency library="org.richfaces" name="base-component.reslib" />
         <cdk:resource-dependency name="richfaces-event.js" />
         <cdk:resource-dependency library="org.richfaces" name="simpleUpload.js" />
-        <cdk:resource-dependency library="org.richfaces" name="simpleUpload.css" />
+        <cdk:resource-dependency library="org.richfaces" name="simpleUpload.ecss" />
         <cdk:renders-children>true</cdk:renders-children>
     </cc:interface>
     <cc:implementation>
@@ -49,17 +49,19 @@ Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
                  <cdk:call expression="renderChildren(facesContext, component)" />
             </div>
             <c:if test="#{!disabled}">
-                <div class="rf-su-cntr-hdn">
-                    <iframe name="#{clientId}" />
+                <div class="rf-su-st">
+                	<span class="rf-su-st-lbl #{attributes['stoppedClass']}">#{attributes['stoppedLabel']}</span>
                     <cdk:object name="progressBar" value="#{component.facets['progress']}" />
                     <c:if test="#{progressBar != null}">
                         <cdk:call expression="progressBar.encodeAll(facesContext)" />
                     </c:if>
                 </div>
+                <iframe style="display: none;" name="#{clientId}" />
                 <cdk:scriptObject name="options">
                     <cdk:scriptOption
-                        attributes="acceptedTypes onfilesubmit ontyperejected onuploadcomplete doneLabel
-						sizeExceededLabel stoppedLabel serverErrorLabel onclear" />
+                        attributes="acceptedTypes onfilesubmit ontyperejected onuploadcomplete 
+                        doneClass sizeExceededClass stoppedClass serverErrorClass 
+                        doneLabel sizeExceededLabel stoppedLabel serverErrorLabel onclear" />
                 </cdk:scriptObject>
                 <script type="text/javascript">new RichFaces.ui.SimpleUpload(#{toScriptArgs(clientId, options)});</script>
             </c:if>

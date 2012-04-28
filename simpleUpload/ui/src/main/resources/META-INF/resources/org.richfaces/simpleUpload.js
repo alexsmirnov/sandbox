@@ -32,18 +32,20 @@
         }
         this.element = jQuery(this.attachToDom());
         this.form = this.element.parents("form:first");
-        this.uploadButton = this.element.children(".rf-su-cntr:first");
-        this.inputContainer = this.uploadButton.find(".rf-su-inp-cntr:first");
+        this.uploadButton = this.element.children().first();
+        this.inputContainer = this.uploadButton.children().first();
         this.input = this.inputContainer.children("input");
-        this.hiddenContainer = this.element.children(".rf-su-cntr-hdn:first");
-        this.iframe = this.hiddenContainer.children("iframe:first");
-        this.progressBarElement = this.iframe.next();
+        this.hiddenContainer = this.uploadButton.next();
+        this.iframe = this.hiddenContainer.next();
+        this.status = this.hiddenContainer.children().first();
+        this.progressBarElement = this.status.next();
         this.progressBar = richfaces.$(this.progressBarElement);
+        if(this.progressBar){
+        	this.progressBarElement.hide();
+        }
         this.cleanInput = this.input.clone();
         this.addProxy = jQuery.proxy(this.__addItem, this);
         this.input.change(this.addProxy);
-        this.uploadButton.mousedown(pressButton)
-            .mouseup(unpressButton).mouseout(unpressButton);
         this.iframe.load(jQuery.proxy(this.__load, this));
         if (this.onfilesubmit) {
             richfaces.Event.bind(this.element, "onfilesubmit", new Function("event", this.onfilesubmit));
@@ -72,13 +74,6 @@
         SERVER_ERROR: "serverError"
     };
 
-    var pressButton = function(event) {
-        jQuery(this).children(":first").css("background-position", "3px 3px").css("padding", "4px 4px 2px 22px");
-    };
-
-    var unpressButton = function(event) {
-        jQuery(this).children(":first").css("background-position", "2px 2px").css("padding", "3px 5px 3px 21px");
-    };
 
     richfaces.BaseComponent.extend(richfaces.ui.SimpleUpload);
 
@@ -88,11 +83,12 @@
             name: "SimpleUpload",
 
             doneLabel: "Done",
+            doneClass: "rf-su-st-dn",
             sizeExceededLabel: "File size is exceeded",
+            sizeExceededClass: "rf-su-st-szex",
             stoppedLabel: "",
             serverErrorLabel: "Server error",
-            clearLabel: "Clear",
-            deleteLabel: "Delete",
+            serverErrorClass: "rf-su-st-er",
 
             __addItem: function() {
                 var fileName = this.input.val();
@@ -124,18 +120,23 @@
                 this.model.uid = uid;
                 this.__submit(uid);
                 if (this.progressBar) {
+                	this.status.hide();
+                	this.status.removeClass(this.doneClass+" "+this.serverErrorClass+" "+this.sizeExceededClass);
                     this.progressBar.setValue(0);
                     var params = {};
                     params[UID_ALT] = uid;
                     this.progressBar.enable(params);
+                	this.progressBarElement.show();
+
                 }
             },
 
             __finishUploading: function(state) {
                 if (this.progressBar) {
                     this.progressBar.disable();
+                	this.progressBarElement.hide();
                 }
-//                this.state.html(this[state + "Label"]);
+                this.status.html(this[state + "Label"]).addClass(this[state + "Class"]).show();
                 this.model.state = state;
             },
 
