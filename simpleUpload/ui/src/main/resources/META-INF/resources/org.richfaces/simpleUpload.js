@@ -61,9 +61,6 @@
     var UID = "rf_fu_uid";
     var UID_ALT = "rf_fu_uid_alt";
     var FAKE_PATH = "C:\\fakepath\\";
-    var ITEM_HTML = '<div class="rf-su-itm">'
-        + '<span class="rf-su-itm-lft"><span class="rf-su-itm-lbl"/><span class="rf-su-itm-st"/></span>'
-        + '<span class="rf-su-itm-rgh"><a href="javascript:void(0)" class="rf-su-itm-lnk"/></span></div>';
 
     var ITEM_STATE = {
         NEW: "new",

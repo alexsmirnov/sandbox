@@ -6,18 +6,29 @@
 	<parent>
 		<groupId>org.richfaces.sandbox.ui.simpleUpload</groupId>
 		<artifactId>simpleUpload-parent</artifactId>
-		<version>4.2.1.Final</version>
+		<version>1.0-SNAPSHOT</version>
 	</parent>
 
 	<artifactId>simpleUpload-demo</artifactId>
 	<name>Richfaces UI Components: simpleUpload demo</name>
 	<packaging>war</packaging>
 
+	<dependencyManagement>
+	<dependencies>
+	<dependency>
+                <groupId>org.richfaces</groupId>
+                <artifactId>richfaces-bom</artifactId>
+                <version>${richfaces.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+	</dependencies>
+	</dependencyManagement>
 	<dependencies>
 		<dependency>
 			<groupId>org.richfaces.core</groupId>
 			<artifactId>richfaces-core-impl</artifactId>
-			<version>${project.version}</version>
+			<version>${richfaces.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.richfaces.sandbox.ui.simpleUpload</groupId>

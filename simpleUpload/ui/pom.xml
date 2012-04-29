@@ -7,7 +7,7 @@
     <parent>
         <groupId>org.richfaces.sandbox.ui.simpleUpload</groupId>
         <artifactId>simpleUpload-parent</artifactId>
-        <version>4.2.1.Final</version>
+        <version>1.0-SNAPSHOT</version>
     </parent>
 
     <artifactId>simpleUpload-ui</artifactId>
@@ -17,17 +17,17 @@
         <dependency>
             <groupId>org.richfaces.ui</groupId>
             <artifactId>richfaces-components-ui</artifactId>
-            <version>${project.version}</version>
+            <version>${richfaces.version}</version>
         </dependency>
         <dependency>
             <groupId>org.richfaces.core</groupId>
             <artifactId>richfaces-core-impl</artifactId>
-            <version>${project.version}</version>
+            <version>${richfaces.version}</version>
         </dependency>
         <dependency>
             <groupId>org.richfaces.cdk</groupId>
             <artifactId>annotations</artifactId>
-            <version>${project.version}</version>
+            <version>${richfaces.version}</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
@@ -44,7 +44,7 @@
             <plugin>
                 <groupId>org.richfaces.cdk</groupId>
                 <artifactId>maven-cdk-plugin</artifactId>
-                <version>${project.version}</version>
+                <version>${richfaces.version}</version>
                 <executions>
                     <execution>
                         <id>cdk-generate-sources</id>

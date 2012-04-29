@@ -27,12 +27,15 @@
 
     <parent>
         <groupId>org.richfaces</groupId>
-        <artifactId>richfaces-root-parent</artifactId>
-        <version>4.2.1.Final</version>
+        <artifactId>richfaces-parent</artifactId>
+        <version>12</version>
     </parent>
-
+    <properties>
+          <richfaces.version>4.2.1.Final</richfaces.version>
+    </properties>
     <groupId>org.richfaces.sandbox.ui.simpleUpload</groupId>
     <artifactId>simpleUpload-parent</artifactId>
+    <version>1.0-SNAPSHOT</version>
     <packaging>pom</packaging>
     <name>Richfaces UI Sandbox Components: simpleUpload parent</name>
 
