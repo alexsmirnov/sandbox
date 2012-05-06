@@ -44,7 +44,7 @@ Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
         <div id="#{clientId}" class="rf-su #{attributes['styleClass']}" cdk:passThroughWithExclusions="">
             <div class="rf-su-cntr">
                  <span class="rf-su-inp-cntr"> <!-- This span is needed for IE7 only. -->
-                       <input type="file" class="rf-su-inp" />
+                       <input type="file" class="rf-su-inp" style="height: auto; line-height: normal"/>
                  </span>
                  <cdk:call expression="renderChildren(facesContext, component)" />
             </div>
