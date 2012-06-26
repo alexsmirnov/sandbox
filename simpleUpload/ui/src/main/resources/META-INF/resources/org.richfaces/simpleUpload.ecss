@@ -52,10 +52,10 @@
 }
 
 .rf-su-inp {
-/*    filter: "alpha(opacity=0)"; */
+    filter: "alpha(opacity=0)";
     font-size: 10em;
     margin: 0;
-/*    opacity: 0; */
+    opacity: 0;
     position: absolute;
     right: 0;
     top: 0;
