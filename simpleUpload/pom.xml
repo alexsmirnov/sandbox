@@ -31,7 +31,7 @@
         <version>12</version>
     </parent>
     <properties>
-          <richfaces.version>4.2.1.Final</richfaces.version>
+          <richfaces.version>4.2.2.Final</richfaces.version>
     </properties>
     <groupId>org.richfaces.sandbox.ui.simpleUpload</groupId>
     <artifactId>simpleUpload-parent</artifactId>
